@@ -68,7 +68,7 @@ public class ParkingLot {
 	 * @return the capacity of the parking lot
 	 */
 	public int getCapacity() {
-		return capacity;
+		return this.capacity;
 	}
 
 	/**

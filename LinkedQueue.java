@@ -70,7 +70,13 @@ public class LinkedQueue<D> implements Queue<D> {
 	}
 
 	public D peek() {
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		//throw new UnsupportedOperationException("This method has not been implemented yet!");
+
+		if (isEmpty()){
+			throw new IllegalStateException("Peek method called on an empty queue");
+		}
+
+		return this.front.value;
 	}
 
 	public int size() {
