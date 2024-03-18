@@ -87,7 +87,7 @@ public class LinkedQueue<D> implements Queue<D> {
 
 
 	public int size() {
-		//throw new UnsupportedOperationException("This method has not been implemented yet!");
+		
 		return this.queueSize;
 	}
 
