@@ -24,8 +24,12 @@ public class LinkedQueue<D> implements Queue<D> {
 	private Elem<D> front;
 	private Elem<D> rear;
 
+	//NEW INSTANCE VARIABLE TO KEEP TRACK OF QUEUE SIZE
+	private int queueSize;
+
 	public LinkedQueue() {
 		front = rear = null;
+		this.queueSize = 0;
 	}
 
 	public boolean isEmpty() {
@@ -49,6 +53,8 @@ public class LinkedQueue<D> implements Queue<D> {
 			rear.next = newElem;
 			rear = newElem;
 		}
+
+		queueSize++;
 	}
 
 	public D dequeue() {
@@ -69,18 +75,20 @@ public class LinkedQueue<D> implements Queue<D> {
 		return returnedValue;
 	}
 
+
 	public D peek() {
-		//throw new UnsupportedOperationException("This method has not been implemented yet!");
 
 		if (isEmpty()){
-			throw new IllegalStateException("Peek method called on an empty queue");
+			throw new NullPointerException("Peek method called on an empty queue");
 		}
 
 		return this.front.value;
 	}
 
+
 	public int size() {
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		//throw new UnsupportedOperationException("This method has not been implemented yet!");
+		return this.queueSize;
 	}
 
 	public String toString() {
