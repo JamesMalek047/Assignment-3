@@ -70,8 +70,15 @@ public class Simulator {
 	 * @param steps is the total number of steps for simulation
 	 */
 	public Simulator(ParkingLot lot, int perHourArrivalRate, int steps) {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		
+		this.lot = lot;
+		this.steps = steps;
+		this.clock = 0;
+		this.probabilityOfArrivalPerSec = new Rational(perHourArrivalRate, NUM_SECONDS_IN_1H);
+		
+		this.incomingQueue = new LinkedQueue<Spot>();
+		this.outgoingQueue = new LinkedQueue<Spot>();
+		
 	}
 
 
@@ -82,13 +89,13 @@ public class Simulator {
 	 */
 	public void simulate() {
 	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		//throw new UnsupportedOperationException("This method has not been implemented yet!");
 	
 	}
 
 	public int getIncomingQueueSize() {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-	
+		
+		return incomingQueue.size();
+			
 	}
 }

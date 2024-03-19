@@ -25,9 +25,9 @@ public class ParkingLot {
 	public ParkingLot(int capacity) {
 
 		if (capacity < 0) {
-		
 			// Hint: throw a suitable exception here.
-		
+			throw new IllegalArgumentException("Capacity must be greater than 0");
+
 		}
 
 		this.capacity = capacity;
@@ -41,8 +41,13 @@ public class ParkingLot {
 	 * @param timestamp is the (simulated) time when the car gets parked in the lot
 	 */
 	public void park(Car c, int timestamp) {
+
+		if (attemptParking(c, timestamp)){
+			Spot newSpot = new Spot(c, timestamp);
+			occupancy.add(newSpot);
+		}
 	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		// CHECK WITH PROFESSOR FOR "ELSE" STATMENT
 	
 	}
 
@@ -53,15 +58,21 @@ public class ParkingLot {
 	 * @return the car (spot) that has been removed
 	 */
 	public Spot remove(int i) {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-	
+
+		if (i < 0 || i >= capacity){
+			throw new IndexOutOfBoundsException("Invalid index");
+		}
+
+		return occupancy.remove(i);	
 	}
 
 	public boolean attemptParking(Car c, int timestamp) {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-	
+
+		if (occupancy.size() >= capacity){
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -80,17 +91,11 @@ public class ParkingLot {
 	 */
 	public Spot getSpotAt(int i) {
 
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		if (i < 0 || i >= capacity){
+			throw new IndexOutOfBoundsException("Invalid index");
+		}
 
-	}
-
-	/**
-	 * @return the total number of cars parked in the lot
-	 */
-	public int getOccupancy() {
-
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-
+		return occupancy.get(i);
 	}
 
 	/**
