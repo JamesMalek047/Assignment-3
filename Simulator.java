@@ -81,6 +81,43 @@ public class Simulator {
 		
 	}
 
+	private void processArrival() {
+		boolean shouldAddNewCar = RandomGenerator.eventOccurred(probabilityOfArrivalPerSec);
+
+		if (shouldAddNewCar)
+			Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
+				incomingQueue.enqueue(new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH), clock));
+	}
+
+	// private void processDeparture() {
+	// 	for (int i = 0; i < lot.getNumRows(); i++)
+	// 		for (int j = 0; j < lot.getNumSpotsPerRow(); j++) {
+	// 			Spot spot = lot.getSpotAt(i, j);
+
+	// 			if (spot != null) {
+	// 				int duration = clock - spot.getTimestamp();
+
+	// 				boolean willLeave = false;
+
+	// 				if (duration > 8 * 3600) {
+	// 					willLeave = true;
+
+	// 				} else {
+	// 					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
+	// 				}
+
+	// 				if (willLeave) {
+	// 					// System.out.println("DEPARTURE AFTER " + duration/3600f + " hours.");
+	// 					Spot toExit = lot.remove(i, j);
+
+	// 					toExit.setTimestamp(clock);
+
+	// 					outgoingQueue.enqueue(spot);
+	// 				}
+	// 			}
+	// 		}
+	// }
+
 
 	/**
 	 * Simulate the parking lot for the number of steps specified by the steps
@@ -90,6 +127,39 @@ public class Simulator {
 	public void simulate() {
 	
 		//throw new UnsupportedOperationException("This method has not been implemented yet!");
+
+		if(clock != 0){
+			throw new IllegalStateException("The clock is invalid");
+		}
+
+		Spot incomingToProcess = null;
+
+		while (clock < steps) {
+			processArrival();
+
+			//processDeparture();
+
+			if (incomingToProcess != null) {
+				boolean isProcessed = lot.attemptParking(incomingToProcess.getCar(), clock);
+
+				if (isProcessed) {
+					System.out.println(incomingToProcess.getCar() + " ENTERED at timestep " + clock
+							+ "; occupancy is at " + lot.getTotalOccupancy());
+					incomingToProcess = null;
+				}
+
+			} else if (!incomingQueue.isEmpty()) {
+				incomingToProcess = incomingQueue.peek();
+			}
+
+			if (!outgoingQueue.isEmpty()) {
+				Spot leaving = outgoingQueue.dequeue();
+				System.out.println(leaving.getCar() + " EXITED at timestep " + clock + "; occupancy is at "
+						+ lot.getTotalOccupancy());
+			}
+
+			clock++;
+		}
 	
 	}
 
