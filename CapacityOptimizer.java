@@ -4,8 +4,33 @@ public class CapacityOptimizer {
 	private static final double THRESHOLD = 5.0d;
 
 	public static int getOptimalNumberOfSpots(int hourlyRate) {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		
+
+		if (hourlyRate <= 0){
+			throw new IllegalArgumentException("The given hourly rate is invalid");
+		}
+		
+		boolean flag = true;
+		int n = 1;
+
+		while (flag){
+			System.out.println("==== Setting lot capacity to: " + n + " ====");
+
+			for (int i = 0; i < NUM_RUNS; i++){
+				ParkingLot parkingLot = new ParkingLot(n);
+
+				Simulator simulation = new Simulator(parkingLot, hourlyRate, Simulator.SIMULATION_DURATION);
+
+				long startClock = System.currentTimeMillis();
+
+				simulation.simulate();
+
+			}
+
+
+		}
+		
+		return -1;		
 	
 	}
 
