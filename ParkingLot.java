@@ -98,6 +98,10 @@ public class ParkingLot {
 		return occupancy.get(i);
 	}
 
+	public int getOccupancy(){
+		return this.occupancy.size();
+	}
+
 	/**
 	 * @return String representation of the parking lot
 	 */

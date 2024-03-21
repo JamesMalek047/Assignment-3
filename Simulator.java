@@ -81,42 +81,30 @@ public class Simulator {
 		
 	}
 
-	private void processArrival() {
-		boolean shouldAddNewCar = RandomGenerator.eventOccurred(probabilityOfArrivalPerSec);
+	// private void processArrival() {
+	// 	boolean shouldAddNewCar = RandomGenerator.eventOccurred(probabilityOfArrivalPerSec);
 
-		if (shouldAddNewCar)
-			Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
-				incomingQueue.enqueue(new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH), clock));
-	}
-
-	// private void processDeparture() {
-	// 	for (int i = 0; i < lot.getNumRows(); i++)
-	// 		for (int j = 0; j < lot.getNumSpotsPerRow(); j++) {
-	// 			Spot spot = lot.getSpotAt(i, j);
-
-	// 			if (spot != null) {
-	// 				int duration = clock - spot.getTimestamp();
-
-	// 				boolean willLeave = false;
-
-	// 				if (duration > 8 * 3600) {
-	// 					willLeave = true;
-
-	// 				} else {
-	// 					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
-	// 				}
-
-	// 				if (willLeave) {
-	// 					// System.out.println("DEPARTURE AFTER " + duration/3600f + " hours.");
-	// 					Spot toExit = lot.remove(i, j);
-
-	// 					toExit.setTimestamp(clock);
-
-	// 					outgoingQueue.enqueue(spot);
-	// 				}
-	// 			}
-	// 		}
+	// 	if (shouldAddNewCar)
+	// 		Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
+	// 			incomingQueue.enqueue(new Spot(newCar,clock));
 	// }
+
+	private void processDeparture() {
+		for (int i = 0; i < lot.getOccupancy(); i++){ 
+				Spot spot = lot.getSpotAt(i);
+
+				if (spot != null) {
+					int duration = clock - spot.getTimestamp();
+
+					boolean willLeave = false;
+					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
+
+					if (duration == MAX_PARKING_DURATION || willLeave) {
+						outgoingQueue.enqueue(lot.remove(i));
+					}
+				}
+			}
+	}
 
 
 	/**
@@ -132,30 +120,59 @@ public class Simulator {
 			throw new IllegalStateException("The clock is invalid");
 		}
 
+		this.clock=0;
+
 		Spot incomingToProcess = null;
 
 		while (clock < steps) {
-			processArrival();
+			//processArrival();
 
 			//processDeparture();
 
-			if (incomingToProcess != null) {
-				boolean isProcessed = lot.attemptParking(incomingToProcess.getCar(), clock);
+			// if (incomingToProcess != null) {
+			// 	boolean isProcessed = lot.attemptParking(incomingToProcess.getCar(), clock);
 
-				if (isProcessed) {
-					System.out.println(incomingToProcess.getCar() + " ENTERED at timestep " + clock
-							+ "; occupancy is at " + lot.getTotalOccupancy());
-					incomingToProcess = null;
-				}
+			// 	if (isProcessed) {
+			// 		System.out.println(incomingToProcess.getCar() + " ENTERED at timestep " + clock
+			// 				+ "; occupancy is at " + lot.getTotalOccupancy());
+			// 		incomingToProcess = null;
+			// 	}
 
-			} else if (!incomingQueue.isEmpty()) {
+			// } 
+
+			if(RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)){
+				Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
+				incomingQueue.enqueue(new Spot(newCar, clock));
+			}
+			
+			 if (!incomingQueue.isEmpty()) {
 				incomingToProcess = incomingQueue.peek();
+				if (lot.attemptParking(incomingToProcess.getCar(), this.clock)){
+					Spot parkedCar = incomingQueue.dequeue();
+					incomingToProcess = null;
+					lot.park(parkedCar.getCar(),this.clock);
+				}
+			}
+
+			processDeparture();
+
+			for (int i = 0; i < lot.getOccupancy(); i++){ 
+				Spot spot = lot.getSpotAt(i);
+
+				if (spot != null) {
+					int duration = clock - spot.getTimestamp();
+
+					boolean willLeave = false;
+					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
+
+					if (duration == MAX_PARKING_DURATION || willLeave) {
+						outgoingQueue.enqueue(lot.remove(i));
+					}
+				}
 			}
 
 			if (!outgoingQueue.isEmpty()) {
 				Spot leaving = outgoingQueue.dequeue();
-				System.out.println(leaving.getCar() + " EXITED at timestep " + clock + "; occupancy is at "
-						+ lot.getTotalOccupancy());
 			}
 
 			clock++;
