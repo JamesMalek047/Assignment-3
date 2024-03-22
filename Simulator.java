@@ -81,31 +81,6 @@ public class Simulator {
 		
 	}
 
-	// private void processArrival() {
-	// 	boolean shouldAddNewCar = RandomGenerator.eventOccurred(probabilityOfArrivalPerSec);
-
-	// 	if (shouldAddNewCar)
-	// 		Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
-	// 			incomingQueue.enqueue(new Spot(newCar,clock));
-	// }
-
-	private void processDeparture() {
-		for (int i = 0; i < lot.getOccupancy(); i++){ 
-				Spot spot = lot.getSpotAt(i);
-
-				if (spot != null) {
-					int duration = clock - spot.getTimestamp();
-
-					boolean willLeave = false;
-					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
-
-					if (duration == MAX_PARKING_DURATION || willLeave) {
-						outgoingQueue.enqueue(lot.remove(i));
-					}
-				}
-			}
-	}
-
 
 	/**
 	 * Simulate the parking lot for the number of steps specified by the steps
@@ -125,20 +100,6 @@ public class Simulator {
 		Spot incomingToProcess = null;
 
 		while (clock < steps) {
-			//processArrival();
-
-			//processDeparture();
-
-			// if (incomingToProcess != null) {
-			// 	boolean isProcessed = lot.attemptParking(incomingToProcess.getCar(), clock);
-
-			// 	if (isProcessed) {
-			// 		System.out.println(incomingToProcess.getCar() + " ENTERED at timestep " + clock
-			// 				+ "; occupancy is at " + lot.getTotalOccupancy());
-			// 		incomingToProcess = null;
-			// 	}
-
-			// } 
 
 			if (RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)){
 				Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
@@ -178,6 +139,7 @@ public class Simulator {
 
 			clock++;
 		}
+
 	
 	}
 

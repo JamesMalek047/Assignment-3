@@ -22,13 +22,14 @@ public class LinkedQueue<D> implements Queue<D> {
 
 	private Elem<D> front;
 	private Elem<D> rear;
+	
 
 	//NEW INSTANCE VARIABLE TO KEEP TRACK OF QUEUE SIZE
 	private int queueSize;
 
 	public LinkedQueue() {
 		front = rear = null;
-		this.queueSize = 0;
+		//this.queueSize = 0;
 	}
 
 	public boolean isEmpty() {
