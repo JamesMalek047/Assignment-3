@@ -154,7 +154,7 @@ public class Simulator {
 				}
 			}
 
-			processDeparture();
+			//processDeparture();
 
 			for (int i = 0; i < lot.getOccupancy(); i++){ 
 				Spot spot = lot.getSpotAt(i);
@@ -172,7 +172,8 @@ public class Simulator {
 			}
 
 			if (!outgoingQueue.isEmpty()) {
-				Spot leaving = outgoingQueue.dequeue();
+				//Spot leaving = 
+				outgoingQueue.dequeue();
 			}
 
 			clock++;
