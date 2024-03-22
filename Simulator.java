@@ -70,82 +70,85 @@ public class Simulator {
 	 * @param steps is the total number of steps for simulation
 	 */
 	public Simulator(ParkingLot lot, int perHourArrivalRate, int steps) {
-		
+
 		this.lot = lot;
 		this.steps = steps;
 		this.clock = 0;
 		this.probabilityOfArrivalPerSec = new Rational(perHourArrivalRate, NUM_SECONDS_IN_1H);
-		
+
 		this.incomingQueue = new LinkedQueue<Spot>();
 		this.outgoingQueue = new LinkedQueue<Spot>();
-		
+
 	}
 
+	public void processDeparture() {
+		int i=0;
+		while (i<lot.getOccupancy()){
+			Spot spotInstance = lot.getSpotAt(i);
+
+			if (spotInstance != null) {
+				int parkingTime = clock - spotInstance.getTimestamp();
+
+				boolean willLeave = false;
+				willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(parkingTime));
+
+				if (parkingTime == MAX_PARKING_DURATION || willLeave) {
+					outgoingQueue.enqueue(lot.remove(i));
+				}
+			}
+			i++;
+		}
+	}
 
 	/**
 	 * Simulate the parking lot for the number of steps specified by the steps
 	 * instance variable
-	 * NOTE: Make sure your implementation of simulate() uses peek() from the Queue interface.
+	 * NOTE: Make sure your implementation of simulate() uses peek() from the Queue
+	 * interface.
 	 */
 	public void simulate() {
-	
-		//throw new UnsupportedOperationException("This method has not been implemented yet!");
 
-		if(clock != 0){
+		// throw new UnsupportedOperationException("This method has not been implemented
+		// yet!");
+
+		if (clock != 0) {
 			throw new IllegalStateException("The clock is invalid");
 		}
 
-		this.clock=0;
+		this.clock = 0;
 
 		Spot incomingToProcess = null;
 
 		while (clock < steps) {
 
-			if (RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)){
-				Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
-				incomingQueue.enqueue(new Spot(newCar, clock));
+			boolean carArrival = RandomGenerator.eventOccurred(probabilityOfArrivalPerSec);
+
+			if (carArrival) {
+				Car carPlusOne = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
+				incomingQueue.enqueue(new Spot(carPlusOne, clock));
 			}
-			
-			 if (!incomingQueue.isEmpty()) {
+
+			if (!incomingQueue.isEmpty()) {
 				incomingToProcess = incomingQueue.peek();
-				if (lot.attemptParking(incomingToProcess.getCar(), this.clock)){
+				if (lot.attemptParking(incomingToProcess.getCar(), this.clock)) {
 					Spot parkedCar = incomingQueue.dequeue();
+					lot.park(parkedCar.getCar(), this.clock);
 					incomingToProcess = null;
-					lot.park(parkedCar.getCar(),this.clock);
 				}
 			}
 
-			//processDeparture();
-
-			for (int i = 0; i < lot.getOccupancy(); i++){ 
-				Spot spot = lot.getSpotAt(i);
-
-				if (spot != null) {
-					int duration = clock - spot.getTimestamp();
-
-					boolean willLeave = false;
-					willLeave = RandomGenerator.eventOccurred(departurePDF.pdf(duration));
-
-					if (duration == MAX_PARKING_DURATION || willLeave) {
-						outgoingQueue.enqueue(lot.remove(i));
-					}
-				}
-			}
+			processDeparture();
 
 			if (!outgoingQueue.isEmpty()) {
-				//Spot leaving = 
 				outgoingQueue.dequeue();
 			}
-
 			clock++;
 		}
-
-	
 	}
 
 	public int getIncomingQueueSize() {
-		
+
 		return incomingQueue.size();
-			
+
 	}
 }

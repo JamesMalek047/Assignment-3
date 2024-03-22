@@ -7,54 +7,58 @@ public class CapacityOptimizer {
 	private static int final_size;
 
 	public static int getOptimalNumberOfSpots(int hourlyRate) {
-		
-		if (hourlyRate <= 0){
+
+		if (hourlyRate <= 0) {
 			throw new IllegalArgumentException("The given hourly rate is invalid");
 		}
-		
+
 		boolean flag = true;
 		int n = 1;
-		
-		while(flag){
+
+		long beginClock;
+		long terminateClock;
+		long simulationTime;
+
+		while (flag) {
 			final_size = 0;
 
 			System.out.println("==== Setting lot capacity to: " + n + " ====");
-
-			for (int i = 0; i < NUM_RUNS; i++){
+			int i = 0;
+			while (i < NUM_RUNS) {
 				ParkingLot lot = new ParkingLot(n);
 
-				Simulator simulation = new Simulator(lot, hourlyRate, Simulator.SIMULATION_DURATION);
+				Simulator runSimulator = new Simulator(lot, hourlyRate, Simulator.SIMULATION_DURATION);
+
 				
-				long startClock = System.currentTimeMillis();
+				beginClock=System.currentTimeMillis();
 
-				simulation.simulate();
+				runSimulator.simulate();
 
-				long endClock = System.currentTimeMillis();
+				terminateClock=System.currentTimeMillis();
 
-				long timeSpent = endClock - startClock;
-				System.out.println("Simulation run "+ (i + 1) + " ("+ timeSpent + "ms) ; Queue length at the end of simulation run: "+ simulation.getIncomingQueueSize());
-				final_size += simulation.getIncomingQueueSize();
+				simulationTime=beginClock - terminateClock;
+				System.out.println("Simulation run " + (i + 1) + " (" + simulationTime
+						+ "ms) ; Queue length at the end of simulation run: " + runSimulator.getIncomingQueueSize());
+				final_size = final_size + runSimulator.getIncomingQueueSize();
 
+				i++;
 			}
-			
-			double sum = final_size / NUM_RUNS; 
-			if (sum <= THRESHOLD){
+
+			double sum = final_size / NUM_RUNS;
+			if (sum <= THRESHOLD) {
 				return n;
-				
 			}
 
-			else{
-				n = n + 1;
+			else {
+				n=n+1;
 				System.out.println(" ");
 			}
 		}
-
-		return -1;	
-	
+		return -1;
 	}
 
 	public static void main(String args[]) {
-	
+
 		StudentInfo.display();
 
 		long mainStart = System.currentTimeMillis();
