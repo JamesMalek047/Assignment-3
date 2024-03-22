@@ -140,7 +140,7 @@ public class Simulator {
 
 			// } 
 
-			if(RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)){
+			if (RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)){
 				Car newCar = new Car(RandomGenerator.generateRandomString(PLATE_NUM_LENGTH));
 				incomingQueue.enqueue(new Spot(newCar, clock));
 			}

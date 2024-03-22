@@ -2,7 +2,6 @@
  * @author Marcel Turcotte, Guy-Vincent Jourdan and Mehrdad Sabetzadeh
  *         (University of Ottawa)
  * 
- * 
  */
 
 // TODO:

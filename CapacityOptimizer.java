@@ -1,4 +1,5 @@
 public class CapacityOptimizer {
+
 	private static final int NUM_RUNS = 10;
 
 	private static final double THRESHOLD = 5.0d;
@@ -7,20 +8,19 @@ public class CapacityOptimizer {
 
 	public static int getOptimalNumberOfSpots(int hourlyRate) {
 		
-
 		if (hourlyRate <= 0){
 			throw new IllegalArgumentException("The given hourly rate is invalid");
 		}
 		
-		//boolean flag = true;
+		boolean flag = true;
 		int n = 1;
 		
-		while(n<=hourlyRate){
+		while(flag){
 			final_size = 0;
 
 			System.out.println("==== Setting lot capacity to: " + n + " ====");
 
-			for(int i = 0; i < NUM_RUNS; i++){
+			for (int i = 0; i < NUM_RUNS; i++){
 				ParkingLot lot = new ParkingLot(n);
 
 				Simulator simulation = new Simulator(lot, hourlyRate, Simulator.SIMULATION_DURATION);
@@ -38,9 +38,9 @@ public class CapacityOptimizer {
 			}
 			
 			double sum = final_size / NUM_RUNS; 
-			if( sum <= THRESHOLD){
+			if (sum <= THRESHOLD){
 				return n;
-
+				
 			}
 
 			else{

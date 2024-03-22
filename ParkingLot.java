@@ -42,13 +42,19 @@ public class ParkingLot {
 	 */
 	public void park(Car c, int timestamp) {
 
+		if (c == null || timestamp < 0){
+			throw new IllegalArgumentException("The given parameter(s) is invalid");
+		}
+
+		if (this.occupancy.size() >= this.capacity){
+			throw new IllegalStateException("Lot is full");
+		}
+
 		if (attemptParking(c, timestamp)){
 			Spot newSpot = new Spot(c, timestamp);
 			occupancy.add(newSpot);
 		}
-	
-		// CHECK WITH PROFESSOR FOR "ELSE" STATMENT
-	
+		
 	}
 
 	/**
@@ -67,6 +73,10 @@ public class ParkingLot {
 	}
 
 	public boolean attemptParking(Car c, int timestamp) {
+
+		if (c == null || timestamp < 0 ){
+			throw new IllegalArgumentException("The given parameter(s) is invalid");
+		}
 
 		if (occupancy.size() >= capacity){
 			return false;
