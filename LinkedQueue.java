@@ -71,7 +71,8 @@ public class LinkedQueue<D> implements Queue<D> {
 		} else {
 			front = front.next;
 		}
-
+		
+		queueSize--;
 		return returnedValue;
 	}
 
