@@ -28,17 +28,15 @@ public class CapacityOptimizer {
 				ParkingLot lot = new ParkingLot(n);
 
 				Simulator runSimulator = new Simulator(lot, hourlyRate, Simulator.SIMULATION_DURATION);
-
 				
-				beginClock=System.currentTimeMillis();
-
+				beginClock = System.currentTimeMillis();
 				runSimulator.simulate();
-
 				terminateClock=System.currentTimeMillis();
 
-				simulationTime=beginClock - terminateClock;
-				System.out.println("Simulation run " + (i + 1) + " (" + simulationTime
-						+ "ms) ; Queue length at the end of simulation run: " + runSimulator.getIncomingQueueSize());
+				simulationTime = terminateClock - beginClock ;
+
+
+				System.out.println("Simulation run " + (i + 1) + " (" + simulationTime + "ms) ; Queue length at the end of simulation run: " + runSimulator.getIncomingQueueSize());
 				final_size = final_size + runSimulator.getIncomingQueueSize();
 
 				i++;
@@ -50,7 +48,7 @@ public class CapacityOptimizer {
 			}
 
 			else {
-				n=n+1;
+				n = n + 1;
 				System.out.println(" ");
 			}
 		}

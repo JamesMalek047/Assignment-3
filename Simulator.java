@@ -71,6 +71,16 @@ public class Simulator {
 	 */
 	public Simulator(ParkingLot lot, int perHourArrivalRate, int steps) {
 
+		if(lot == null){
+			throw new IllegalArgumentException("The given Lot cannot be null");
+
+		}
+
+		if(perHourArrivalRate < 0 || steps < 0){
+			throw new IllegalArgumentException("Cannot have negative parameters for perHourArrivalRate or steps");
+
+		}
+
 		this.lot = lot;
 		this.steps = steps;
 		this.clock = 0;
@@ -82,8 +92,8 @@ public class Simulator {
 	}
 
 	public void processDeparture() {
-		int i=0;
-		while (i<lot.getOccupancy()){
+		int i = 0;
+		while (i < lot.getOccupancy()){
 			Spot spotInstance = lot.getSpotAt(i);
 
 			if (spotInstance != null) {
@@ -96,7 +106,9 @@ public class Simulator {
 					outgoingQueue.enqueue(lot.remove(i));
 				}
 			}
+
 			i++;
+
 		}
 	}
 
@@ -107,9 +119,6 @@ public class Simulator {
 	 * interface.
 	 */
 	public void simulate() {
-
-		// throw new UnsupportedOperationException("This method has not been implemented
-		// yet!");
 
 		if (clock != 0) {
 			throw new IllegalStateException("The clock is invalid");
@@ -147,7 +156,6 @@ public class Simulator {
 	}
 
 	public int getIncomingQueueSize() {
-
 		return incomingQueue.size();
 
 	}
