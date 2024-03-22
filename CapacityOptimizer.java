@@ -12,11 +12,10 @@ public class CapacityOptimizer {
 			throw new IllegalArgumentException("The given hourly rate is invalid");
 		}
 		
-		boolean flag = true;
+		//boolean flag = true;
 		int n = 1;
-
 		
-		while(flag){
+		while(n<=hourlyRate){
 			final_size = 0;
 
 			System.out.println("==== Setting lot capacity to: " + n + " ====");
@@ -41,7 +40,9 @@ public class CapacityOptimizer {
 			double sum = final_size / NUM_RUNS; 
 			if( sum <= THRESHOLD){
 				return n;
+
 			}
+
 			else{
 				n = n + 1;
 				System.out.println(" ");

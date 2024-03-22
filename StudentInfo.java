@@ -17,8 +17,8 @@ public class StudentInfo {
 
         System.out.println("************************************************************");
         System.out.println("*                                                          *");
-        System.out.println("*                                                          *");
-        System.out.println("*                                                          *");
+        System.out.println("*              Melanie Malek  300351596                    *");
+        System.out.println("*               James Malek  300352042                     *");
         System.out.println("*                                                          *");
         System.out.println("************************************************************");
         System.out.println();
